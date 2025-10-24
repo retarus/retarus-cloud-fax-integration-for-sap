@@ -1,0 +1,489 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "PRODUCTIVE instance (DE) of service \"Retarus Cloud Fax REST APIT\"",
+    "version" : "1.0.0",
+    "title" : "Retarus Cloud Fax REST API"
+  },
+  "host" : "faxws.retarus.com",
+  "basePath" : "/rest/v1",
+  "schemes" : [ "https" ],
+  "consumes" : [ "application/json" ],
+  "produces" : [ "application/json" ],
+  "security" : [ {
+    "httpBasicAuth" : [ ]
+  } ],
+  "paths" : {
+    "/{cuNo}/fax" : {
+      "post" : {
+        "summary" : "Send a fax job request",
+        "operationId" : "sendJobRequest",
+        "parameters" : [ {
+          "name" : "cuNo",
+          "in" : "path",
+          "description" : "Customer Number",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "requestBody",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/FaxJobRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Job accepted",
+            "schema" : {
+              "$ref" : "#/definitions/FaxJobResponse"
+            }
+          }
+        }
+      }
+    },
+    "/{cuNo}/fax/reports/{jobId}" : {
+      "get" : {
+        "summary" : "Fetch the status report for a single job",
+        "operationId" : "getStatusReport",
+        "parameters" : [ {
+          "name" : "cuNo",
+          "in" : "path",
+          "description" : "Customer Number",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "jobId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status report available and delivered",
+            "schema" : {
+              "$ref" : "#/definitions/FaxReport"
+            }
+          },
+          "404" : {
+            "description" : "Status report not available"
+          }
+        }
+      },
+      "delete" : {
+        "summary" : "Delete the status report for a single job",
+        "operationId" : "deleteStatusReport",
+        "parameters" : [ {
+          "name" : "cuNo",
+          "in" : "path",
+          "description" : "Customer Number",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "jobId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status report deleted",
+            "schema" : {
+              "$ref" : "#/definitions/JobDeleteReport"
+            }
+          },
+          "400" : {
+            "description" : "Status report not available"
+          }
+        }
+      }
+    },
+    "/{cuNo}/fax/reports" : {
+      "get" : {
+        "summary" : "Fetch all available status reports for this account",
+        "operationId" : "getAllStatusReports",
+        "parameters" : [ {
+          "name" : "cuNo",
+          "in" : "path",
+          "description" : "Customer Number",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status reports delivered",
+            "schema" : {
+              "$ref" : "#/definitions/FaxReports"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "summary" : "Delete all status reports for this account",
+        "operationId" : "deleteAllStatusReports",
+        "parameters" : [ {
+          "name" : "cuNo",
+          "in" : "path",
+          "description" : "Customer Number",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status reports deleted",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/JobDeleteReport"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions" : {
+    "httpBasicAuth" : {
+      "description" : "HTTP Basic Auth",
+      "type" : "basic"
+    }
+  },
+  "definitions" : {
+    "FaxJobRequest" : {
+      "type" : "object",
+      "required" : [ "recipients", "renderingOptions", "statusReportOptions" ],
+      "properties" : {
+        "reference" : {
+          "$ref" : "#/definitions/Reference"
+        },
+        "recipients" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/FaxRecipient"
+          }
+        },
+        "documents" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/DocumentWithData"
+          }
+        },
+        "transportOptions" : {
+          "$ref" : "#/definitions/TransportOptions"
+        },
+        "renderingOptions" : {
+          "$ref" : "#/definitions/RenderingOptions"
+        },
+        "statusReportOptions" : {
+          "$ref" : "#/definitions/StatusReportOptions"
+        },
+        "meta" : {
+          "$ref" : "#/definitions/MetaData"
+        }
+      },
+      "title" : "Fax Job Request"
+    },
+    "Reference" : {
+      "type" : "object",
+      "properties" : {
+        "customerDefinedId" : {
+          "type" : "string"
+        },
+        "billingCode" : {
+          "type" : "string"
+        },
+        "billingInfo" : {
+          "type" : "string"
+        }
+      },
+      "title" : "Reference"
+    },
+    "FaxRecipient" : {
+      "type" : "object",
+      "required" : [ "number" ],
+      "properties" : {
+        "number" : {
+          "type" : "string"
+        },
+        "alternativeNumbers" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "properties" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/RecipientProperty"
+          }
+        }
+      },
+      "title" : "Fax Recipient"
+    },
+    "RecipientProperty" : {
+      "type" : "object",
+      "required" : [ "key", "value" ],
+      "properties" : {
+        "key" : {
+          "type" : "string"
+        },
+        "value" : {
+          "type" : "string"
+        }
+      },
+      "title" : "Recipient Property"
+    },
+    "DocumentWithData" : {
+      "type" : "object",
+      "required" : [ "name" ],
+      "properties" : {
+        "name" : {
+          "type" : "string"
+        },
+        "charset" : {
+          "type" : "string"
+        },
+        "reference" : {
+          "type" : "string"
+        },
+        "data" : {
+          "type" : "string"
+        }
+      },
+      "title" : "Document With Data"
+    },
+    "TransportOptions" : {
+      "type" : "object",
+      "properties" : {
+        "csid" : {
+          "type" : "string"
+        },
+        "isExpress" : {
+          "type" : "boolean"
+        },
+        "isBlacklistEnabled" : {
+          "type" : "boolean"
+        }
+      },
+      "title" : "Transport Options"
+    },
+    "RenderingOptions" : {
+      "type" : "object",
+      "required" : [ "paperFormat" ],
+      "properties" : {
+        "paperFormat" : {
+          "type" : "string",
+          "enum" : [ "A4", "LETTER" ]
+        },
+        "resolution" : {
+          "type" : "string",
+          "enum" : [ "HIGH", "LOW" ]
+        },
+        "coverpageTemplate" : {
+          "type" : "string"
+        },
+        "overlay" : {
+          "$ref" : "#/definitions/Overlay"
+        },
+        "header" : {
+          "type" : "string"
+        }
+      },
+      "title" : "Rendering Options"
+    },
+    "Overlay" : {
+      "type" : "object",
+      "required" : [ "mode", "name" ],
+      "properties" : {
+        "name" : {
+          "type" : "string"
+        },
+        "mode" : {
+          "type" : "string"
+        }
+      },
+      "title" : "Overlay"
+    },
+    "StatusReportOptions" : {
+      "type" : "object",
+      "required" : [ "reportPurgeTs" ],
+      "properties" : {
+        "reportPurgeTs" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "reportMail" : {
+          "$ref" : "#/definitions/ReportMail"
+        },
+        "httpStatusPush" : {
+          "$ref" : "#/definitions/HttpStatusPush"
+        }
+      },
+      "title" : "Status Report Options"
+    },
+    "ReportMail" : {
+      "type" : "object",
+      "properties" : {
+        "successAddress" : {
+          "type" : "string"
+        },
+        "failureAddress" : {
+          "type" : "string"
+        }
+      },
+      "title" : "Report Mail"
+    },
+    "HttpStatusPush" : {
+      "type" : "object",
+      "required" : [ "targetUrl" ],
+      "properties" : {
+        "targetUrl" : {
+          "type" : "string"
+        },
+        "principal" : {
+          "type" : "string"
+        },
+        "credentials" : {
+          "type" : "string"
+        },
+        "authMethod" : {
+          "type" : "string",
+          "enum" : [ "HTTP_BASIC", "HTTP_DIGEST", "NONE" ]
+        }
+      },
+      "title" : "Http Status Push"
+    },
+    "MetaData" : {
+      "type" : "object",
+      "required" : [ "customerReference" ],
+      "properties" : {
+        "customerReference" : {
+          "type" : "string"
+        },
+        "jobValid" : {
+          "$ref" : "#/definitions/JobValid"
+        }
+      },
+      "title" : "Meta Data"
+    },
+    "JobValid" : {
+      "type" : "object",
+      "properties" : {
+        "start" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "end" : {
+          "type" : "string",
+          "format" : "date-time"
+        }
+      },
+      "title" : "Job Valid"
+    },
+    "FaxJobResponse" : {
+      "type" : "object",
+      "required" : [ "jobId" ],
+      "properties" : {
+        "jobId" : {
+          "type" : "string"
+        }
+      },
+      "title" : "Fax Job Response"
+    },
+    "FaxReport" : {
+      "type" : "object",
+      "required" : [ "jobId", "recipientStatus" ],
+      "properties" : {
+        "jobId" : {
+          "type" : "string"
+        },
+        "recipientStatus" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/FaxRecipientWithStatus"
+          }
+        }
+      },
+      "title" : "Fax Report"
+    },
+    "FaxRecipientWithStatus" : {
+      "type" : "object",
+      "required" : [ "durationInSecs", "number", "reason", "status" ],
+      "properties" : {
+        "number" : {
+          "type" : "string"
+        },
+        "alternativeNumbers" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "properties" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/RecipientProperty"
+          }
+        },
+        "status" : {
+          "type" : "string"
+        },
+        "reason" : {
+          "type" : "string"
+        },
+        "sentTs" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "durationInSecs" : {
+          "type" : "integer"
+        },
+        "sentToNumber" : {
+          "type" : "string"
+        },
+        "remoteCsid" : {
+          "type" : "string"
+        }
+      },
+      "title" : "Fax Recipient With Status"
+    },
+    "JobDeleteReport" : {
+      "type" : "object",
+      "required" : [ "jobId" ],
+      "properties" : {
+        "jobId" : {
+          "type" : "string"
+        }
+      },
+      "title" : "Job Delete Report"
+    },
+    "FaxReports" : {
+      "type" : "object",
+      "required" : [ "reports" ],
+      "properties" : {
+        "reports" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/FaxReport"
+          }
+        }
+      },
+      "title" : "Fax Reports"
+    }
+  },
+  "parameters" : {
+    "jobIdParam" : {
+      "name" : "jobId",
+      "in" : "path",
+      "required" : true,
+      "type" : "string"
+    },
+    "cuNoParam" : {
+      "name" : "cuNo",
+      "in" : "path",
+      "description" : "Customer Number",
+      "required" : true,
+      "type" : "string"
+    }
+  }
+}
