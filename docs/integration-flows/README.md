@@ -244,5 +244,5 @@ All the connections using OpenConnectors are already pre-configured but they may
 
 ![OpenConnector connection setup](./images/openconnectorpar.png)
 
-- The first parameter you may need to change is the Base URI. Check that the pre-configured one is matching the same that you get when setting up the Open Connector (please refer to the relevant [procedure](../api-integration/README.md))
-- The second parameter is the name of the credentials set you have created. If you created a set of credentials matching the preconfigured one, you will not need to change this. Refer to the relevant [documentation](../api-integration/README.md) to setup the credentials for the Open Connector.
+- The first parameter you may need to change is the Base URI. Check that the pre-configured one is matching the same that you get when setting up the Open Connector (please refer to the relevant [procedure](../api-integration/README.md#3-create-the-credentials-to-access-the-open-connector))
+- The second parameter is the name of the credentials set you have created. If you created a set of credentials matching the preconfigured one, you will not need to change this. Refer to the relevant [documentation](../api-integration/README.md#3-create-the-credentials-to-access-the-open-connector) to setup the credentials for the Open Connector.
