@@ -1,0 +1,12 @@
+curl --location '{yourIntegrationSuiteAddress}/http/sendFaxFacade' \
+--header 'destFaxNumber: {yourFaxNumber}' \
+--header 'csid: {yourCSID}' \
+--header 'key01: FromName' \
+--header 'value01: {yourFromName} ' \
+--header 'key02: ToName' \
+--header 'value02: {yourToName}' \
+--header 'key03: SubjectTitle' \
+--header 'value03: {tourSubjecttitle}' \
+--header 'cuno: {yourCustomerNumber}' \
+--header 'Authorization: Basic {yourCredentialsB64}' \
+--form 'file=@"faxSample.pdf"'
