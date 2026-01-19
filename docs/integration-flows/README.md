@@ -8,17 +8,17 @@
   - [How to Install the package](#how-to-install-the-package)
   - [How to Use the iFlows](#how-to-use-the-iflows)
     - [Prerequisites](#prerequisites)
-    - [1. CloudFaxFlowPost](#1-cloudfaxflowpost)
+    - [1. SendFax](#1-sendfax)
       - [1.1. Description](#11-description)
       - [1.2. Input Connection](#12-input-connection)
       - [1.3. Input Payload](#13-input-payload)
       - [1.4. Reply](#14-reply)
-    - [2. CloudFaxGetReport](#2-cloudfaxgetreport)
+    - [2. GetStatusReport](#2-getstatusreport)
       - [2.1. Description](#21-description)
       - [2.2. Input Connection](#22-input-connection)
       - [2.3. Input Payload](#23-input-payload)
       - [2.4. Reply](#24-reply)
-    - [3. sendFaxExternalInterface](#3-sendfaxexternalinterface)
+    - [3. SendFaxExternalInterface](#3-sendfaxexternalinterface)
       - [3.1. Description](#31-description)
       - [3.2. Input Connection](#32-input-connection)
       - [3.3. Input Payload](#33-input-payload)
@@ -28,17 +28,17 @@
 
 ## Introduction
 
-The *CloudFaxIntegration package* contains the following Integration Flows (iFlows in short):
+The *Retarus_Global_CloudFaxIntegration_S4H-RetCloudFax* (CloudFaxIntegration in short) package contains the following Integration Flows (iFlows in short):
 
-1. CloudFaxFlowPost
-2. CloudFaxGetReport
-3. sendFaxExternalInterface
+1. Global_SendFax_ProcessDirect_S4H2Retarus (SendFax in short)
+2. Global_GetStatusReport_HTTPS_Retarus2S4H (GetStatusReport in short)
+3. Global_SendFaxExternalInterface_HTTPS_S4H2Retarus (SendFaxExternalInterface in short)
 
 The first 3 iFlows use an Open Connector to communicate and authenticate to Retarus Cloud Fax Service REST API.
 
 ## How to Install the package
 
-1. Download to your PC the *.zip* file containing the full Integration package from here: *[CloudfaxIntegration.zip](../../src/integration-flows/CloudFaxIntegration.zip)*
+1. Download to your PC the *.zip* file containing the full Integration package from here: *[Retarus_Global_CloudFaxIntegration_S4H-RetCloudFax.zip](../../src/integration-flows/Retarus_Global_CloudFaxIntegration_S4H-RetCloudFax.zip)*
 2. Open your Integration Suite in SAP BTP and head to ***Design => Integration and APIs***
 3. Select ***Import*** in the top right corner of the screen
 4. Select the *.zip* file you just downloaded and confirm
@@ -56,14 +56,14 @@ The first 3 iFlows use an Open Connector to communicate and authenticate to Reta
 ### Prerequisites
 
 - Before being able to use the imported iFlows, they must be deployed first.
-The only iFlows that is immediately deplyable is ***sendFaxExternalInterface*** so, click on then relevant 3-dots-icon in che column *Action* and select ***Deploy***: ![deploy](./images/deployInterface.png)
+The only iFlows that is immediately deplyable is ***SendFaxExternalInterface*** so, click on the relevant 3-dots-icon in che column *Action* and select ***Deploy***: ![deploy](./images/deployInterface.png)
     >The others iFlows, instead, require modifications that will be explained here after, one by one, mostly related to the Open Connector.
-- If you still haven't created the Open Connector instance connected to Retarus Cloud Faxe,follow this [procedure](../api-integration/README.md) and create one.
+- If you still haven't created the Open Connector instance connected to Retarus Cloud Fax,follow this [procedure](../api-integration/README.md) and create one.
 - Get the credential name for the Open Connector and the relevant endpoint address (see the mentioned [procedure](../api-integration/README.md))
 
-### 1. CloudFaxFlowPost
+### 1. SendFax
 
-![CloudFaxFlowPost](./images/CloudFaxFlowPost.png)
+![SendFax](./images/CloudFaxFlowPost.png)
 
 #### 1.1. Description
 
@@ -74,7 +74,7 @@ This is the main iFlow of the package. It's meant to receive a *form-data* conta
 This iFlows is meant to be used as part of bigger integrations and it cannot be directly called from a public endpoint: its input connection is a ***ProcessDirect***, the native SAP optimized connection to link iFlows.
 
 It can be called from another iFlow by using the address ***"/postFax"*** in an output ProcessDirect connection.
->About this you can use as example the supplied *sendFaxExternalInterface* iFlow
+>About this you can use as example the supplied *SendFaxExternalInterface* iFlow
 
 #### 1.3. Input Payload
 
@@ -141,9 +141,9 @@ The iFlow will return, in *JSON* format, the ID of the fax job as feedback by Re
 
 Otherwise, it will return an error message in a different format, based on the kind of error: errors coming from Retarus will be in JSON format, system errors due to SAP could be in different formats (such as HTML).
 
-### 2. CloudFaxGetReport
+### 2. GetStatusReport
 
-![CloudFaxGetReport](./images/CloudFaxGetReport.png)
+![GetStatusReport](./images/CloudFaxGetReport.png)
 
 #### 2.1. Description
 
@@ -209,17 +209,17 @@ The reply, in case of a successfull connection, will be a report in *json* forma
 
 For the full specifications, please refer to the [Retarus Report API](https://developers.retarus.com/fax/fax4a-api/fax-reports/getstatusreport).
 
-### 3. sendFaxExternalInterface
+### 3. SendFaxExternalInterface
 
 ![sendfaxeExternalInterface](./images/sendFaxExternalInterface.png)
 
 #### 3.1. Description
 
-This iFlow is used with the sole scope of providing an interface to ***CloudFaxFlowPost*** to make it reachable from the "outer" world.
+This iFlow is used with the sole scope of providing an interface to ***SendFax*** to make it reachable from the "outer" world.
 
 It can be used for testing puposes (with postman, for instance) or by any application which is not using iFlows that is, instead, capable of sending *multipart/form-data* via HTTPS.
 
-The ***Add Info*** block is just adding a request property to make the ***CloudFaxFlowPost*** that will follow aware that the request has been sent by an external connection and not through an *OpenDirect* call from another iFlow. It's meant to be used for future developments.
+The ***Add Info*** block is just adding a request property to make the ***SendFax*** that will follow aware that the request has been sent by an external connection and not through an *OpenDirect* call from another iFlow. It's meant to be used for future developments.
 
 #### 3.2. Input Connection
 
@@ -228,15 +228,15 @@ Input connection is a standard HTTPS POST to an endpoint provided by SAP after t
 
 #### 3.3. Input Payload
 
-Same as for ***CloudFaxFlowPost***, see par. [1.3. Input Payload](#13-input-payload)
+Same as for ***SendFax***, see par. [1.3. Input Payload](#13-input-payload)
 
 #### 3.4. Reply
 
-Same as for ***CloudFaxFlowPost***, see par. [1.4. Reply](#14-reply)
+Same as for ***SendFax***, see par. [1.4. Reply](#14-reply)
 
 #### 3.5. Output connection
 
-This iFlow also features an output ProcessDirect connection that is preconfigured to forward the payload to ***CloudFaxFlowPost***
+This iFlow also features an output ProcessDirect connection that is preconfigured to forward the payload to ***SendFax***
 
 ### 4. Customizing the OpenConnector connections
 

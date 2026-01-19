@@ -22,5 +22,5 @@ The Integration flows supplied here can be a part of wider integration scenarios
 
 To setup and use the Retarus Cloud Fax Integration, please refer to the relevant detailed documentation and download files:
 
-1. Integration Package: [docs](./docs/integration-flows/README.md) - [files](./src/integration-flows/CloudFaxIntegration.zip)
+1. Integration Package: [docs](./docs/integration-flows/README.md) - [files].\src\integration-flows\Retarus_Global_CloudFaxIntegration_S4H-RetCloudFax_V1.2.zip)
 2. Open Connector: [docs](./docs/api-integration/README.md) - [files](./src/api-integration/cloudFaxRestAPI.json)
