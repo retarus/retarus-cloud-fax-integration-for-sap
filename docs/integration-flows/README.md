@@ -12,6 +12,9 @@
       - [1.1. Description](#11-description)
       - [1.2. Input Connection](#12-input-connection)
       - [1.3. Input Payload](#13-input-payload)
+        - [1.3.1. Content type](#131-content-type)
+        - [1.3.2. Mandatory Headers](#132-mandatory-headers)
+        - [1.3.3. Optional headers](#133-optional-headers)
       - [1.4. Reply](#14-reply)
     - [2. GetStatusReport](#2-getstatusreport)
       - [2.1. Description](#21-description)
@@ -78,25 +81,41 @@ It can be called from another iFlow by using the address ***"/postFax"*** in an 
 
 #### 1.3. Input Payload
 
-The input payload must be a ***multipart/form-data*** message type, with the following features:
+The payload must be have the following structure.
 
-- Body: a *.pdf* or *.tiff* file
-- Mandatory Headers:
-  - Content-Type: multipart/form-data
-  - cuno: 12345
-    >it's the Customer Number assigned by Retarus
-  - csid: faxSender
-    >it's the *Called Subscriber IDentification* of the fax
-  - destFaxNumber
-    >the recipient fax number
+##### 1.3.1. Content type
 
-Beside these, it's possible to add some optional headers that will be used to populate the coverletter stored in the Retarus account.
+The input payload must be a ***multipart/form-data*** message type so it must feature the mandatory header:
 
-Retarus allows Customers to store coverletters in *HTML* format which can include custom placeholders, such as *\$\{FromName\}*, *\$\{FromCompanyName\}*, *\$\{FromFaxNumber\}* or *\$\{ToCompanyName\}*.
+- Content-Type: multipart/form-data
 
-These placeholders can be populated when rendering the coverletter, by using the values specified in the optional headers.
+while the message Body must be either a *.pdf* or *.tiff* file.
 
-The optinal headers must be added in the following way:
+##### 1.3.2. Mandatory Headers
+
+```js
+- cuno: 12345                    //the Customer Number assigned by Retarus
+- csid: faxSender                //the *Called Subscriber IDentification* of the fax
+- destFaxNumber: +4912345678     //the recipient fax number
+```
+
+##### 1.3.3. Optional headers
+
+The Optional headers to select the the coverpage template between the ones stored in the Retarus account and to populate the template with the desired values.  
+
+Retarus allows Customers to store multimple coverletter templates in *HTML* format. These templates can include custom placeholders, such as *\$\{FromName\}*, *\$\{FromCompanyName\}*, *\$\{FromFaxNumber\}* or *\$\{ToCompanyName\}*.
+
+Placeholders can be populated when rendering the coverletter, by using the values specified in the optional headers.
+
+To select the template, add header:
+
+```js
+- coverpage: myTemplateFileName.html
+```
+
+>Note: *If no coverpage is found, the system will automatically load the template selected as default in the Retarus system.*
+
+To pupulate the template (be it either the default or a selected one), the optional headers must be added in the following way:
 
 ```js
 - key01: *placeholder1 name*
@@ -130,6 +149,7 @@ curl --location 'SAP-API-ENDPOINT' \
 --header 'value02: Jane Doe' \
 --header 'key03: SubjectTitle' \
 --header 'value03: Cloud fax integration testing' \
+--header 'coverpage: myTemplate.html' \
 --header 'cuno: 12345' \
 --header 'Authorization: ••••••' \
 --form 'file=@"attachment.pdf"'

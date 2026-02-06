@@ -4,6 +4,7 @@
 
 - [Setting up a test case](#setting-up-a-test-case)
   - [Summary](#summary)
+  - [Naming convention](#naming-convention)
   - [Introduction](#introduction)
   - [Prerequisites](#prerequisites)
     - [Retarus](#retarus)
@@ -16,11 +17,30 @@
       - [4.1. Basic use case - no coverpage](#41-basic-use-case---no-coverpage)
       - [4.2. Full use case - all coverpage variables setup](#42-full-use-case---all-coverpage-variables-setup)
 
+## Naming convention
+
+- **Full package name**: Retarus_Global_CloudFaxIntegration_S4H-RetCloudFax
+- **Short name: CloudFaxIntegration
+
+Contained Integration Flows (iFlows in short) full names:
+
+1. Global_SendFax_ProcessDirect_S4H2Retarus
+2. Global_GetStatusReport_HTTPS_Retarus2S4H
+3. Global_SendFaxExternalInterface_HTTPS_S4H2Retarus
+
+Relevant short names:
+
+1. SendFax
+2. GetStatusReport
+3. SendFaxExternalInterface
+
+>*Note: In the following documentation short names will be used for a cleaner content exposition*
+
 ## Introduction
 
 This document will guide you through the process of setting up a test case of the Cloud Fax Connector for SAP Solutions.
 
-To test the Cloud Fax Connector, we will use the iFlow called [sendFaxExternalInterface](../../docs/integration-flows/README.md#3-sendfaxexternalinterface), supplied with this package, to provide a public endpoint URL that will give access to the iFlow [cloudfaxflowpost](../../docs/integration-flows/README.md#1-cloudfaxflowpost) which, in turn, will send a payload to Retarus Cloud Fax Service.
+To test the Cloud Fax Connector, we will use the iFlow called [sendFaxExternalInterface](../../docs/integration-flows/README.md#3-sendfaxexternalinterface), supplied with this package, to provide a public endpoint URL that will give access to the iFlow [SendFax](../../docs/integration-flows/README.md#1-sendfax) which, in turn, will send a payload to Retarus Cloud Fax Service.
 
 The payload will be a sample *.pdf* file sent via a *form-data* type message.
 
@@ -125,6 +145,7 @@ Keep this URL for the next step.
 The file [curlPostFax.txt](./samples/curlPostFax.txt) contains a cURL command which you can use to send the supplied sample file [faxSample.pdf](./samples/faxSample.pdf) as fax.
 
 If you rename that file into a *.bat* file, it will be possible to execute it direcly, after you have adjusted the missing parts.
+
 >*Note: also be sure to have both the .pdf and the .bat file in the same folder*
 
 This is the file content:
