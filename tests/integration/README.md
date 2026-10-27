@@ -42,9 +42,9 @@ This document will guide you through the process of setting up a test case of th
 
 To test the Cloud Fax Connector, we will use the iFlow called [sendFaxExternalInterface](../../docs/integration-flows/README.md#3-sendfaxexternalinterface), supplied with this package, to provide a public endpoint URL that will give access to the iFlow [SendFax](../../docs/integration-flows/README.md#1-sendfax) which, in turn, will send a payload to Retarus Cloud Fax Service.
 
-The payload will be a sample *.pdf* file sent via a *form-data* type message.
+The payload will be a sample *.pdf* file sent via a *multipart/form-data* type message.
 
-Beside the sample *.pdf* file, this package include a *.txt* file feature the *cURL command* to send the *form-data* and a *.html* file to be used as coverletter for the fax.
+Beside the sample *.pdf* file, this package include a *.txt* file which feature the *cURL command* to send the *form-data* and a *.html* file to be used as coverletter for the fax.
 
 We will see these files and how to use them in details in the [Test Setup](#test-setup) section.
 
@@ -62,7 +62,7 @@ We will see these files and how to use them in details in the [Test Setup](#test
 
 - You have the *credentials* to authenticate to the deployed iFlows.
 - You have already *imported and deployed* the *Integration flows* supplied with this package (if not, please follow these [instructions](../../docs/integration-flows/README.md)).
-- You have already setup the required *Open Connector* (if not, please follow these [instructions](../../docs/api-integration/README.md)) and the relevant credentials to use in the iFlows.
+- You have already setup and the deployed the *Value Mapping* artifact (if not, please follow these [instructions](../../docs/integration-flows/README.md#4-setup-the-global-mapping).
 - You have downloaded the files in the sample folder:
   - [coverpage-default.ftl.html](coverpage-default.ftl.html)
   - [curlPostFax.txt](curlPostFax.txt)
@@ -161,6 +161,7 @@ curl --location '{yourIntegrationSuiteAddress}/http/sendFaxFacade' \
 --header 'key03: SubjectTitle' \
 --header 'value03: {tourSubjecttitle}' \
 --header 'cuno: {yourCustomerNumber}' \
+--header 'loginIdSerial: {yourLoginIdSerial}' \
 --header 'Authorization: Basic {yourCredentialsB64}' \
 --form 'file=@"faxSample.pdf"'
 ```
@@ -171,6 +172,7 @@ You need to replace the bracketed variables with the relevant values. These are 
 - *{yourFaxNumber}*: this is the recipient's fax number. e.g. +49123456789.
 - *{yourCSID}*: this is the fax Called Subscriber Identification.
 - *{yourCustomerNumber}*: this is the Customer Number assigned by Retarus.
+- *{yourLoginIdSerial}*: the loginIdSerial to identify the set of credential stored in the Integration Suite to be used to authenticate to the Retarus endpoint.
 - *{yourCredentialsB64}*: this is the Base64 encoding of the credentials you need to authenticate to SAP. They must be in the format *username:password* and then encoded.
 
 The other header values are used to fill out the coverpage placeholder variables.
@@ -190,6 +192,7 @@ curl --location 'https://retarus-integrations-eu.it-cpiNNN-rt.cfapps.euXX-YYY.ha
 --header 'destFaxNumber: +49123456789' \
 --header 'csid: RetarusCloudFax' \
 --header 'cuno: 12345' \
+--header 'loginIdSerial: 1' \
 --header 'Authorization: Basic dXNlcm5hbWU6cGFzc3dvcmQ=' \
 --form 'file=@"faxSample.pdf"'
 ```
@@ -219,6 +222,7 @@ curl --location 'https://retarus-integrations-eu.it-cpiNNN-rt.cfapps.euXX-YYY.ha
 --header 'key07: SubjectText' \
 --header 'value07: This is a test Fax sent from SAP Integration Suite via Retarus Cloud Fax service' \
 --header 'cuno: 12345' \
+--header 'loginIdSerial: 1' \
 --header 'Authorization: Basic dXNlcm5hbWU6cGFzc3dvcmQ=' \
 --form 'file=@"faxSample.pdf"'
 ```

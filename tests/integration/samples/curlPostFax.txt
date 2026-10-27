@@ -8,5 +8,6 @@ curl --location '{yourIntegrationSuiteAddress}/http/sendFaxFacade' \
 --header 'key03: SubjectTitle' \
 --header 'value03: {tourSubjecttitle}' \
 --header 'cuno: {yourCustomerNumber}' \
+--header 'loginIdSerial: {yourLoginIdSerial}' \
 --header 'Authorization: Basic {yourCredentialsB64}' \
 --form 'file=@"faxSample.pdf"'
